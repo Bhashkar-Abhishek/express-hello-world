@@ -1,14 +1,15 @@
 const express = require("express");
-const fetch = require("node-fetch");
+const axios = require("axios");
 
 const app = express();
 const PORT = 3000;
 
 app.get("/api/posts", async (req, res) => {
   try {
-    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-    const data = await response.json();
-    res.json(data);
+    const response = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts"
+    );
+    res.json(response.data);
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
   }
