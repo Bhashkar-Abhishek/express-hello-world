@@ -1,24 +1,19 @@
-const http = require('http');
-const axios = require('axios');
+const express = require("express");
+const fetch = require("node-fetch");
 
-const server = http.createServer(async (req, res) => {
-  if (req.url === '/api') {
-    try {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
-      const data = response.data;
+const app = express();
+const PORT = 3000;
 
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(data));
-    } catch (error) {
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
-      res.end('An error occurred while fetching data from the API.');
-    }
-  } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('Route not found.');
+app.get("/api/posts", async (req, res) => {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred" });
   }
 });
 
-server.listen(3000, () => {
-  console.log('Server is listening on port 3000');
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
